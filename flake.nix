@@ -9,8 +9,11 @@
     extra-substituters = "https://lean4.cachix.org";
   };
 
-  outputs = { self, lean, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, lean, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
     let
+      pkgs = import nixpkgs {
+        inherit system;
+      };
       leanPkgs = lean.packages.${system};
       pkg = leanPkgs.buildLeanPackage {
         name = "nalgebra";  # must match the name of the top-level .lean file
@@ -22,5 +25,6 @@
       };
 
       defaultPackage = pkg.modRoot;
+
     });
 }
